@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Form, Modal, Row, Col } from 'react-bootstrap';
 
+// home page of the book store app
 export class Home extends Component {
     static displayName = Home.name;
 
@@ -17,11 +18,14 @@ export class Home extends Component {
 
     handleClose = () => this.setState({show: false, reservedBook: null });
     handleShow = () => this.setState({ show: true });
+
+    // receive book name and perform book searching
     handleSearch = (e) => {
         e.preventDefault();
         e.target.bookName.value ? this.searchBook(e.target.bookName.value) : this.populateBookData();
     }
 
+    // returns all books in a table format
     renderBookTable(books) {
         return (
             <table class="table table-striped">
@@ -38,7 +42,7 @@ export class Home extends Component {
                     {books.map(book =>
                         <tr>
                             <td scope="row">{book.name}</td>
-                            <td>{book.id}</td>
+                            <td>{book.bookId}</td>
                             <td>{book.quantity}</td>
                             <td>{book.stock}</td>
                             <td><button className="btn btn-primary btn-sm" onClick={() => this.reserveBook(book.id)}>Reserve</button></td>
@@ -104,6 +108,8 @@ export class Home extends Component {
         );
     }
 
+
+//  API functions for talking to backend
     async populateBookData() {
         const response = await fetch('books');
         const data = await response.json();
