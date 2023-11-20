@@ -19,7 +19,7 @@ public class BooksController : ControllerBase
         await _booksService.GetAsync();
 
     [HttpPut("reserve/{id}")]
-    public async Task<ActionResult<String>> Reserve(string id)
+    public async Task<IActionResult> Reserve(string id)
     {
         var book = await _booksService.GetAsync(id);
 
@@ -32,11 +32,17 @@ public class BooksController : ControllerBase
         {
             book.Stock -= 1;
             await _booksService.UpdateAsync(id, book);
-            return "{\"bookingNumber\": \"" + book.Name + " - copy " + book.Stock.ToString() +
-            "\", \"name\": \"" + book.Name + "\"}";
+            var data = new {
+                bookingNumber = book.Name + " - copy " + book.Stock.ToString(),
+                name = book.Name
+            };
+            return Ok(data);
         } else
         {
-            return "{\"name\": \"" + book.Name + "\"}";
+            var data = new {
+                name = book.Name
+            };
+            return Ok(data);
         }
     }
 
